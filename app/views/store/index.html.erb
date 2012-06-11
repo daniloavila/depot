@@ -1,0 +1,18 @@
+<% if notice %>
+	<p id="notice"><%= notice %></p>
+<% end %>
+
+<h1>Your Catalog</h1>
+
+<% @products.each do |produtct| %>
+
+	<div class="entry">
+		<%= image_tag produtct.image_url  %>
+		<h3><%= produtct.title  %></h3>
+		<%= sanitize produtct.description  %>
+		<div class="price_line">
+			<span class="price"><%= number_to_currency produtct.price  %></span>
+		</div>
+	</div>
+
+<% end %>
