@@ -2,7 +2,8 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    @orders = Order.paginate :page => params[:page], :order => 'created_at desc', :per_page => 10
+    @cart = current_cart
 
     respond_to do |format|
       format.html # index.html.erb
@@ -24,8 +25,9 @@ class OrdersController < ApplicationController
   # GET /orders/new
   # GET /orders/new.json
   def new
-
+    puts "entrou aki new "
     @cart = current_cart
+
     if @cart.line_items.empty?
       redirect_to store_url, :notice => "Your cart is empty"
       return
@@ -55,10 +57,13 @@ class OrdersController < ApplicationController
         Cart.destroy session[:cart_id]
         session[:cart_id] = nil
 
-        format.html { redirect_to store_url, :notice => 'Thanks for your order!' }
+        Notifier.order_received(@order).deliver
+
+        format.html { redirect_to(store_url, :notice => 'Thanks for your order!') }
         format.json { render :json => @order, :status => :created, :location => @order }
       else
-        format.html { render :action => "new" }
+        @cart = current_cart
+        format.html { render :action => "new"}
         format.json { render :json => @order.errors, :status => :unprocessable_entity }
       end
     end
