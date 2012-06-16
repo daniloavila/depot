@@ -1,0 +1,10 @@
+pt:
+
+
+  layouts:
+  	application:
+  		title:     "Publicacoes de Programatic"
+  		home:      "Inicio"
+  		questions: "Perguntas"
+  		contatct:  "Contato"
+  		news:      "Notícias"
